@@ -27,6 +27,7 @@ def download_videos(url: str, out_dir: str):
             'preferredcodec': 'wav',
         }],
         'outtmpl': os.path.join(out_dir, '%(title)s.%(ext)s'),
+        "progress_hooks": [lambda d: print(f"{d['downloaded_bytes'] / d['total_bytes'] * 100} %")]
     }
 
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
