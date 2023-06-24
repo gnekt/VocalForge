@@ -18,3 +18,7 @@ torch==1.11.0
 tqdm==4.64.1
 whisper==1.1.10
 yt_dlp==2023.3.4
+PyInquirer==1.0.3
+pyfiglet==0.8.post1
+sendgrid==6.10.0
+termcolor==2.3.0
