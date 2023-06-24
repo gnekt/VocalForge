@@ -3,6 +3,11 @@ import os
 import yt_dlp
 import natsort
 from typing import List, Tuple
+
+## Costant Variables
+MAX_AUDIO_LEN_seconds = 3500000
+MAX_AUDIO_SIZE_bytes = 500000000
+
 def download_videos(url: str, out_dir: str):
     '''This function downloads audio from a youtube playlist and saves it to disk in the .wav format. 
        If the audio is longer than 1 hour, it is split into smaller clips and saved to disk. 
@@ -33,18 +38,17 @@ def download_videos(url: str, out_dir: str):
     #split if audio is above 1 hour
     for filename in os.listdir(out_dir):
         file = AudioSegment.from_file(os.path.join(out_dir, filename))
-        if len(file) > 3500000:
-            slices = file[::3500000]
+        if len(file) > MAX_AUDIO_LEN_seconds:
+            slices = file[::MAX_AUDIO_LEN_seconds]
             for index, slice in enumerate(slices):
                 slice.export(os.path.join(out_dir, f'{os.path.splitext(filename)[0]}_{index}.wav'), format='wav')
             os.remove(os.path.join(out_dir, filename))
-        #add 5 second blank at start
-
-
+    
+    #add 5 second blank at start
     for filename in os.listdir(out_dir):
         file_stat = os.stat(os.path.join(out_dir, filename))
         file = AudioSegment.from_file(os.path.join(out_dir, filename))
-        if file_stat.st_size > 500000000:
+        if file_stat.st_size > MAX_AUDIO_SIZE_bytes:
             slices = file[::int((file.duration_seconds*1000)/2)]
             for index, slice in enumerate(slices):
                 slice = blank + slice
